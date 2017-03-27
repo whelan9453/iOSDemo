@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="HowsTheWeather" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="anders-jilden-108186.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="6xX-wp-YuB">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="How's The Weather?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="X6d-jw-PyR">
+                                <rect key="frame" x="60" y="57" width="294" height="39"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your city:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2qm-rh-HKX">
+                                <rect key="frame" x="149" y="117" width="116" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Eg. London, Taipei..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fsr-FM-bww">
+                                <rect key="frame" x="20" y="173" width="374" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yh6-j8-8rC">
+                                <rect key="frame" x="183" y="229" width="49" height="30"/>
+                                <state key="normal" title="Submit"/>
+                                <connections>
+                                    <action selector="sendRequest:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oAQ-n9-Suq"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="8yC-f3-Uq3">
+                                <rect key="frame" x="20" y="267" width="374" height="176"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="176" id="Era-0D-kpe"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="8yC-f3-Uq3" firstAttribute="leading" secondItem="fsr-FM-bww" secondAttribute="leading" id="49x-QL-7Fw"/>
+                            <constraint firstItem="yh6-j8-8rC" firstAttribute="top" secondItem="fsr-FM-bww" secondAttribute="bottom" constant="26" id="4sq-up-Pcw"/>
+                            <constraint firstItem="6xX-wp-YuB" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="7q8-gA-iVX"/>
+                            <constraint firstItem="fsr-FM-bww" firstAttribute="top" secondItem="2qm-rh-HKX" secondAttribute="bottom" constant="35" id="AOQ-yA-GSf"/>
+                            <constraint firstItem="2qm-rh-HKX" firstAttribute="top" secondItem="X6d-jw-PyR" secondAttribute="bottom" constant="21" id="Bel-Uk-qUJ"/>
+                            <constraint firstItem="fsr-FM-bww" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="LR8-2l-y0k"/>
+                            <constraint firstItem="2qm-rh-HKX" firstAttribute="centerX" secondItem="X6d-jw-PyR" secondAttribute="centerX" id="XM8-wx-e1a"/>
+                            <constraint firstItem="fsr-FM-bww" firstAttribute="centerX" secondItem="2qm-rh-HKX" secondAttribute="centerX" id="YQM-36-Kmv"/>
+                            <constraint firstAttribute="trailing" secondItem="6xX-wp-YuB" secondAttribute="trailing" id="bpA-kB-FlZ"/>
+                            <constraint firstItem="8yC-f3-Uq3" firstAttribute="trailing" secondItem="fsr-FM-bww" secondAttribute="trailing" id="fGf-Qz-9cy"/>
+                            <constraint firstItem="6xX-wp-YuB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="iDo-1N-Gxd"/>
+                            <constraint firstItem="yh6-j8-8rC" firstAttribute="centerX" secondItem="fsr-FM-bww" secondAttribute="centerX" id="lkG-68-1a6"/>
+                            <constraint firstItem="X6d-jw-PyR" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="37" id="rHN-q7-Bad"/>
+                            <constraint firstItem="X6d-jw-PyR" firstAttribute="centerX" secondItem="6xX-wp-YuB" secondAttribute="centerX" id="xMr-nz-ysd"/>
+                            <constraint firstItem="8yC-f3-Uq3" firstAttribute="top" secondItem="yh6-j8-8rC" secondAttribute="bottom" constant="8" symbolic="YES" id="xws-Dp-biM"/>
+                            <constraint firstItem="6xX-wp-YuB" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="yNb-xZ-odh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="locationTextField" destination="fsr-FM-bww" id="Ses-uh-oBc"/>
+                        <outlet property="resultLabel" destination="8yC-f3-Uq3" id="14z-PV-Hfo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-98.550724637681171" y="123.09782608695653"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="anders-jilden-108186.jpg" width="3000" height="2000"/>
+    </resources>
+</document>
