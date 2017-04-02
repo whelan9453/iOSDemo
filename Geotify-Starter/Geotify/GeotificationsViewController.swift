@@ -33,9 +33,12 @@ class GeotificationsViewController: UIViewController {
   @IBOutlet weak var mapView: MKMapView!
   
   var geotifications: [Geotification] = []
+  let locationManager = CLLocationManager()
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    locationManager.delegate = self
+    locationManager.requestAlwaysAuthorization()
     loadAllGeotifications()
   }
   
@@ -57,6 +60,7 @@ class GeotificationsViewController: UIViewController {
     }
   }
   
+  //Takes the newly-updated geotifications list and persists it via NSUserDefaults.
   func saveAllGeotifications() {
     var items: [Data] = []
     for geotification in geotifications {
@@ -83,8 +87,10 @@ class GeotificationsViewController: UIViewController {
     updateGeotificationsCount()
   }
   
+  //Geofences are a shared system resource, Core Location restricts the number of registered geofences to a maximum of 20 per app.
   func updateGeotificationsCount() {
     title = "Geotifications (\(geotifications.count))"
+    navigationItem.rightBarButtonItem?.isEnabled = (geotifications.count < 20)
   }
   
   // MARK: Map overlay functions
@@ -115,18 +121,28 @@ class GeotificationsViewController: UIViewController {
 // MARK: AddGeotificationViewControllerDelegate
 extension GeotificationsViewController: AddGeotificationsViewControllerDelegate {
   
+  /**
+   The method is the delegate call invoked by the AddGeotificationViewController upon creating a geotification.
+   It’s responsible for creating a new Geotification object using the values passed from AddGeotificationsViewController, 
+   and updating both the map view and the geotifications list accordingly.
+   */
   func addGeotificationViewController(controller: AddGeotificationViewController, didAddCoordinate coordinate: CLLocationCoordinate2D, radius: Double, identifier: String, note: String, eventType: EventType) {
     controller.dismiss(animated: true, completion: nil)
-    let geotification = Geotification(coordinate: coordinate, radius: radius, identifier: identifier, note: note, eventType: eventType)
+    let clampedRadius = min(radius, locationManager.maximumRegionMonitoringDistance)
+    let geotification = Geotification(coordinate: coordinate, radius: clampedRadius, identifier: identifier, note: note, eventType: eventType)
     add(geotification: geotification)
+    startMonitoring(geotification: geotification)
     saveAllGeotifications()
   }
   
 }
 
 // MARK: - Location Manager Delegate
+//The location manager calls locationManager(_:didChangeAuthorizationStatus:) whenever the authorization status changes.
 extension GeotificationsViewController: CLLocationManagerDelegate {
-  
+  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    mapView.showsUserLocation = (status == .authorizedAlways)
+  }
 }
 
 // MARK: - MapView Delegate
@@ -163,11 +179,44 @@ extension GeotificationsViewController: MKMapViewDelegate {
     return MKOverlayRenderer(overlay: overlay)
   }
   
+  //Invoked whenever the user taps the “delete” accessory control on each annotation.
   func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
     // Delete geotification
     let geotification = view.annotation as! Geotification
+    stopMonitoring(geotification: geotification)
     remove(geotification: geotification)
     saveAllGeotifications()
+  }
+  
+  //Core Location requires each geofence to be represented as a CLCircularRegion instance before it can be registered for monitoring.
+  func region(withGeotification geotification: Geotification) -> CLCircularRegion {
+    let region = CLCircularRegion(center: geotification.coordinate, radius: geotification.radius, identifier: geotification.identifier)
+    region.notifyOnEntry = (geotification.eventType == .onEntry)
+    region.notifyOnExit = !region.notifyOnEntry//Designing your app to allow only one notification type per geofence.
+    return region
+  }
+  
+  //Start monitoring a given geotification whenever the user adds one.
+  func startMonitoring(geotification: Geotification) {
+    //Determines if the device has the required hardware to support the monitoring of geofences.
+    if !CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+      showAlert(withTitle:"Error", message: "Geofencing is not supported on this device!")
+      return
+    }
+    //Check the authorization status to ensure that the app has also been granted the required permission to use Location Services.
+    if CLLocationManager.authorizationStatus() != .authorizedAlways {
+      showAlert(withTitle:"Warning", message: "Your geotification is saved but will only be activated once you grant Geotify permission to access the device location.")
+    }
+    let region = self.region(withGeotification: geotification)
+    locationManager.startMonitoring(for: region)
+  }
+  
+  //Stop monitoring a given geotification when the user removes it from the app.
+  func stopMonitoring(geotification: Geotification) {
+    for region in locationManager.monitoredRegions {
+      guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == geotification.identifier else { continue }
+      locationManager.stopMonitoring(for: circularRegion)
+    }
   }
   
 }
