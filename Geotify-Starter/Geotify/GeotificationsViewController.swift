@@ -207,6 +207,7 @@ extension GeotificationsViewController: MKMapViewDelegate {
     if CLLocationManager.authorizationStatus() != .authorizedAlways {
       showAlert(withTitle:"Warning", message: "Your geotification is saved but will only be activated once you grant Geotify permission to access the device location.")
     }
+    print("Start monitoring geotifiactions.")
     let region = self.region(withGeotification: geotification)
     locationManager.startMonitoring(for: region)
   }
@@ -216,7 +217,18 @@ extension GeotificationsViewController: MKMapViewDelegate {
     for region in locationManager.monitoredRegions {
       guard let circularRegion = region as? CLCircularRegion, circularRegion.identifier == geotification.identifier else { continue }
       locationManager.stopMonitoring(for: circularRegion)
+      print("Stop monitoring geotifiactions. \(String(describing: circularRegion))")
     }
+  }
+  
+  //Log any errors that the location manager encounters to facilitate your debugging.
+  func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+    print("Monitoring failed for region with identifier: \(region!.identifier)")
+  }
+  
+  //Log any errors that the location manager encounters to facilitate your debugging.
+  func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    print("Location Manager failed with the following error: \(error)")
   }
   
 }
