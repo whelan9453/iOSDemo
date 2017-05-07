@@ -37,8 +37,20 @@ class GeotificationsViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    /*
+     You set the view controller as the delegate of the locationManager instance so that the view controller can receive the relevant delegate method calls.
+     */
     locationManager.delegate = self
+    /*
+     You make a call to requestAlwaysAuthorization(), which invokes a prompt to the user requesting for Always authorization to use location services.
+     Apps with geofencing capabilities need Always authorization, due to the need to monitor geofences even when the app isn’t running.
+     Info.plist has already been setup with a message to show the user when requesting the user’s location under the key NSLocationAlwaysUsageDescription.
+     */
     locationManager.requestAlwaysAuthorization()
+    /*
+     You call loadAllGeotifications(), which deserializes the list of geotifications previously saved to NSUserDefaults 
+     and loads them into a local geotifications array. The method also loads the geotifications as annotations on the map view.
+     */
     loadAllGeotifications()
   }
   
@@ -190,7 +202,18 @@ extension GeotificationsViewController: MKMapViewDelegate {
   
   //Core Location requires each geofence to be represented as a CLCircularRegion instance before it can be registered for monitoring.
   func region(withGeotification geotification: Geotification) -> CLCircularRegion {
+    /*
+     You initialize a CLCircularRegion with the location of the geofence, the radius of the geofence and an identifier 
+     that allows iOS to distinguish between the registered geofences of a given app. 
+     The initialization is rather straightforward, as the Geotification model already contains the required properties.
+     */
     let region = CLCircularRegion(center: geotification.coordinate, radius: geotification.radius, identifier: geotification.identifier)
+    /*
+     The CLCircularRegion instance also has two Boolean properties, notifyOnEntry and notifyOnExit. 
+     These flags specify whether geofence events will be triggered when the device enters and leaves the defined geofence, respectively. 
+     Since you’re designing your app to allow only one notification type per geofence, 
+     you set one of the flags to true while you set the other to false, based on the enum value stored in the Geotification object.
+     */
     region.notifyOnEntry = (geotification.eventType == .onEntry)
     region.notifyOnExit = !region.notifyOnEntry//Designing your app to allow only one notification type per geofence.
     return region
@@ -209,6 +232,7 @@ extension GeotificationsViewController: MKMapViewDelegate {
     }
     print("Start monitoring geotifiactions.")
     let region = self.region(withGeotification: geotification)
+    //you register the CLCircularRegion instance with Core Location for monitoring.
     locationManager.startMonitoring(for: region)
   }
   
